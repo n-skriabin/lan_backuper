@@ -6,6 +6,8 @@ using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +16,8 @@ namespace Lab_02
 {
     public partial class Form1 : Form
     {
+        private const int BufferSize = 1024;
+
         public Form1()
         {
             InitializeComponent();
@@ -31,6 +35,11 @@ namespace Lab_02
             var zipPath = $@"C:\FormOfDirectory-{dateTimeNow.ToString("dd/MM/yyyy-H/mm/ss")}.zip";
 
             ZipFile.CreateFromDirectory(Path.GetFullPath(textBox1.Text), zipPath, CompressionLevel.Fastest, false);
+
+            IPAddress.Parse("127.0.0.1");
+            TcpClient soc = new TcpClient("127.0.0.1", 5000);
+            soc.Client.SendFile(zipPath);
+            soc.Close();
         }
 
         private void button3_Click(object sender, EventArgs e)

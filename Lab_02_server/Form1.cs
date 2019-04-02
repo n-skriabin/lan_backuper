@@ -65,7 +65,7 @@ namespace Lab_02_server
 
                 //wait for sender
                 listener.Start();
-                while (true)
+                while (_ServerIsWorking)
                 {
                     if (listener.Pending())
                     {
@@ -73,23 +73,30 @@ namespace Lab_02_server
                     }
                 }
 
-                DateTime dateTimeNow = DateTime.Now;
-
-                dateTimeNow = dateTimeNow = new DateTime(
-                    dateTimeNow.Ticks - (dateTimeNow.Ticks % TimeSpan.TicksPerSecond),
-                    dateTimeNow.Kind);
-
-                using (var client = listener.AcceptTcpClient())
-                using (var stream = client.GetStream())
-                using (var output = File.Create($@"C:\serverFolder\dataBACKUP-{dateTimeNow.ToString("dd/MM/yyyy_H/mm/ss")}.zip"))
+                if (_ServerIsWorking)
                 {
+                    DateTime dateTimeNow = DateTime.Now;
 
-                    var buffer = new byte[BytesPerRead];
-                    int bytesRead;
-                    while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+                    dateTimeNow = dateTimeNow = new DateTime(
+                        dateTimeNow.Ticks - (dateTimeNow.Ticks % TimeSpan.TicksPerSecond),
+                        dateTimeNow.Kind);
+
+                    using (var client = listener.AcceptTcpClient())
+                    using (var stream = client.GetStream())
+                    using (var output = File.Create($@"C:\serverFolder\dataBACKUP-{dateTimeNow.ToString("dd/MM/yyyy_H/mm/ss")}.zip"))
                     {
-                        output.Write(buffer, 0, bytesRead);
+
+                        var buffer = new byte[BytesPerRead];
+                        int bytesRead;
+                        while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            output.Write(buffer, 0, bytesRead);
+                        }
                     }
+                }
+                else
+                {
+                    listener.Stop();
                 }
             }
             else
@@ -99,8 +106,6 @@ namespace Lab_02_server
                     button1.Text = "Включить сервер";
                 }));
                 _ServerIsWorking = false;
-
-                listener.Stop();
             }
         }
     }

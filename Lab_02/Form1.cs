@@ -25,6 +25,14 @@ namespace Lab_02
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (textBox1.Text == string.Empty)
+            {
+                MessageBox.Show("Пожалуйста, перед тем как отправить данные" +
+                    "необходимо выбрать директорию для создания образа.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+
             var path = Path.GetFullPath(textBox1.Text);
             DateTime dateTimeNow = DateTime.Now;
 

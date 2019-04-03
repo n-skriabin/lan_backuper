@@ -40,6 +40,15 @@ namespace Lab_02_server
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (textBox1.Text == string.Empty)
+            {
+                MessageBox.Show("Пожалуйста, перед тем как запустить сервер " + 
+                    "необходимо выбрать директорию для сохранения " +
+                    "принимаемых данных", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+
             new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
@@ -83,7 +92,7 @@ namespace Lab_02_server
 
                     using (var client = listener.AcceptTcpClient())
                     using (var stream = client.GetStream())
-                    using (var output = File.Create($@"C:\serverFolder\dataBACKUP-{dateTimeNow.ToString("dd/MM/yyyy_H/mm/ss")}.zip"))
+                    using (var output = File.Create($@"{textBox1.Text}\dataBACKUP-{dateTimeNow.ToString("dd/MM/yyyy_H/mm/ss")}.zip"))
                     {
 
                         var buffer = new byte[BytesPerRead];

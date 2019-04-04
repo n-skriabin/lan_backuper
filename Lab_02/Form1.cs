@@ -42,7 +42,17 @@ namespace Lab_02
 
             var zipPath = $@"C:\FormOfDirectory-{dateTimeNow.ToString("dd/MM/yyyy-H/mm/ss")}.zip";
 
-            ZipFile.CreateFromDirectory(Path.GetFullPath(textBox1.Text), zipPath, CompressionLevel.Fastest, false);
+            //ZipFile.CreateFromDirectory(Path.GetFullPath(textBox1.Text), zipPath, CompressionLevel.Fastest, true);
+
+            var zipLibObj = new ZipLibrary();
+
+            var result = zipLibObj.Create(zipPath, path);
+
+            if (result == 1)
+            {
+                MessageBox.Show("Произошла ошибка. Пожалуйста, повторите отправку.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             IPAddress.Parse("127.0.0.1");
             TcpClient soc = new TcpClient("127.0.0.1", 5000);
